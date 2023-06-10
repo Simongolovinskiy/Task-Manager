@@ -1,16 +1,41 @@
+import flask_bcrypt
 from flask import render_template, request, redirect, flash, url_for, Blueprint
 from flask_login import current_user, login_user, logout_user, login_required
 from models import check_password_hash, User
-from main.forms import LoginForm
+from task_manage.forms import LoginForm, RegistrationForm
+from task_manage import bcrypt, database
+import os
+import shutil
 
 
 main = Blueprint('main', __name__)
+# users = Blueprint('user', __name__)
+
+
+@main.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(username=form.username.data,
+                    email=form.email.data,
+                    password=hashed_password)
+        database.session.add(user)
+        database.session.commit()
+        full_path = os.path.join(os.getcwd(), 'main/static', 'profile_pictures', user.username)
+        if not os.path.exists(full_path):
+            os.mkdir(full_path)
+
+        shutil.copy(f'{os.getcwd()}/blog/static/profile_pictures/default.jpg', full_path)
+        flash('Account successfully created. You can redirect to log into your account.')
+        return redirect(url_for('main.login'))
+    return render_template('register.html', form=form, title='Registration', legend='Registration')
 
 
 @main.route('/')
 def index():
     users = User.query.all()
-    return render_template('index.html', users=users)
+    return render_template('base.html', users=users)
 
 
 @main.route('/login', methods=['GET', 'POST'])
@@ -40,6 +65,7 @@ def account():
 def logout():
     logout_user()
     return redirect(url_for('main.index'))
+
 
 @main.route('/')
 def home_page():

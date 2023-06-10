@@ -1,0 +1,84 @@
+.register_form {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.legend {
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-post-title {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+}
+
+.is-invalid {
+  border-color: #dc3545 !important;
+}
+
+.invalid-feedback {
+  color: #dc3545;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.form-group_button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.btn_sign_in {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 4px;
+  border: none;
+  color: #fff;
+  background-color: #4caf50;
+  transition: background-color 0.3s ease;
+}
+
+.btn_sign_in:hover {
+  background-color: #45a049;
+}
+
+.text-muted {
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.text-muted a {
+  color: #000;
+  text-decoration: none;
+}
+
+.text-muted a:hover {
+  text-decoration: underline;
+}
+
+.border-top {
+  border-top: 1px solid #ccc;
+  margin-top: 20px;
+}
+
+/* Дополнительные стили для общего оформления */
+body {
+  background-color: #f9f9f9;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}

@@ -28,11 +28,17 @@
 
         <ul class="Main_menu">
             <li><a href="{{ url_for('main.index') }}"><p>Main page</p></a></li>
+            {% if current_user.is_authenticated %}
             <li><a href="#"><p>Tasks</p></a></li>
-            <li><a href="#"><p>Registration</p></a></li>
-            <li><a href="{{ url_for('main.login') }}"><p>Login</p></a></li>
-            <li><a href="#"><p>Account</p></a></li>
             <li><a href="#"><p>Add task</p></a></li>
+            <li><a href="/account"><p>Account</p></a></li>
+            {% else %}
+            <li><a href="{{ url_for('main.register') }}"><p>Registration</p></a></li>
+            <li><a href="{{ url_for('main.login') }}"><p>Login</p></a></li>
+            {% endif %}
+            {% if current_user.is_authenticated %}
+            <li><a href="{{ url_for('main.logout') }}"><p>Logout</p></a></li>
+            {% endif %}
             <li><a href="{{ url_for('main.index') }}"><p>Exit</p></a></li>
         </ul>
     </header>
