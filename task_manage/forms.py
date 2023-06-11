@@ -13,7 +13,7 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Enter')
 
     def validate_username(self, username):
-        user = User.query.filter_by(username=username.data)
+        user = User.query.filter_by(username=username.data).first()
         if user:
             flash('That username is already taken. '
                   'Choose another one, please', 'danger')
@@ -29,6 +29,7 @@ class RegistrationForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
+    username = StringField('Nickname', validators=[DataRequired()])
     email = StringField('E-mail', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Stay logged')

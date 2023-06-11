@@ -20,7 +20,7 @@
             <li><a href="{{ url_for('main.register') }}"><p>Register</p></a></li>
         {% endif %}
         {% if current_user.is_authenticated %}
-            <li><a href="#"><p>{{ current_user.username }}</p></a></li>
+            <li><a href="/account"><p>{{ current_user.username }}</p></a></li>
         {% endif %}
     </ul>
 </header>

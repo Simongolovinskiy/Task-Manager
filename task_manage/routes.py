@@ -22,11 +22,11 @@ def register():
                     password=hashed_password)
         database.session.add(user)
         database.session.commit()
-        full_path = os.path.join(os.getcwd(), 'main/static', 'profile_pictures', user.username)
-        if not os.path.exists(full_path):
-            os.mkdir(full_path)
+        # full_path = os.path.join(os.getcwd(), 'main/static', 'profile_pictures', user.username)
+        # if not os.path.exists(full_path):
+        #     os.mkdir(full_path)
 
-        shutil.copy(f'{os.getcwd()}/blog/static/profile_pictures/default.jpg', full_path)
+        # shutil.copy(f'{os.getcwd()}/blog/static/profile_pictures/default.jpg', full_path)
         flash('Account successfully created. You can redirect to log into your account.')
         return redirect(url_for('main.login'))
     return render_template('register.html', form=form, title='Registration', legend='Registration')
@@ -43,8 +43,8 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+    if form.validate_on_submit:
+        user = User.query.filter_by(username=form.username.data).first()
         if user and check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')

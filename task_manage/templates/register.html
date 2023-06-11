@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/registerstyle.css') }}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='/styles/registerstyle.css') }}">
+
 <div class="register_form">
     <form action="" method="POST">
 
         {{ form.hidden_tag() }}
-        <legend class="legend">{{ legend }}</legend>
 
         {% if form.username.errors %}
         {{ form.username(class='form-post-title is-invalid', placeholder='Username') }}
         <div class="invalid-feedback">
-            {% for errors in form.username.errors %}
+            {% for error in form.username.errors %}
             <span>{{ error }}</span>
             {% endfor %}
         </div>
@@ -22,7 +23,7 @@
         {% if form.email.errors %}
         {{ form.email(class='form-post-title is-invalid', placeholder='E-mail') }}
         <div class="invalid-feedback">
-            {% for errors in form.email.errors %}
+            {% for error in form.email.errors %}
             <span>{{ error }}</span>
             {% endfor %}
         </div>
@@ -33,7 +34,7 @@
         {% if form.password.errors %}
         {{ form.password(class='form-post-title is-invalid', placeholder='Password') }}
         <div class="invalid-feedback">
-            {% for errors in form.password.errors %}
+            {% for error in form.password.errors %}
             <span>{{ error }}</span>
             {% endfor %}
         </div>
@@ -44,7 +45,7 @@
         {% if form.confirm_password.errors %}
         {{ form.confirm_password(class='form-post-title is-invalid', placeholder='Confirm Password') }}
         <div class="invalid-feedback">
-            {% for errors in form.confirm_password.errors %}
+            {% for error in form.confirm_password.errors %}
             <span>{{ error }}</span>
             {% endfor %}
         </div>
@@ -52,23 +53,14 @@
         {{ form.confirm_password(class='form-post-title', placeholder='Confirm Password') }}
         {% endif %}
 
-
         <div class="form-group_button">
-           <div class="btn">
-                {{ form.submit(class='btn_sign_in') }}
-           </div>
-              <small class="text-muted">
-            Already have an account? <a class='ml-2' href="{{ url_for('main.login')}}">Enter</a>
-        </small>
+            {{ form.submit(class='btn_sign_in', value='Register') }}
+            <small class="text-muted">
+                Already have an account? <a class='ml-2' href="{{ url_for('main.login') }}">Login</a>
+            </small>
         </div>
 
     </form>
-    <div class="border-top">
-
-    </div>
 </div>
 
-
-</div>
-
-{% endblock content%}
+{% endblock content %}

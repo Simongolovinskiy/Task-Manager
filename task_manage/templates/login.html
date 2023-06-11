@@ -1,43 +1,51 @@
 {% extends 'base.html' %}
 
-{% block title %}
-    {% if title %}
-        <title>{{title}}</title>
-    {% else %}
-        <title>Login to Flask Task-manager</title>
-    {% endif %}
-{% endblock title %}
-
 {% block content %}
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/registerstyle.css') }}">
-    <div class="content">
 
-        <h1>Login</h1>
+<link rel="stylesheet" href="{{ url_for('static', filename='/styles/loginstyle.css') }}">
 
-        <form method="POST" action="{{ url_for('main.login') }}">
-            {{ form.hidden_tag() }}
+<div class="login_form">
+    <form action="" method="POST">
 
-            <div class="form-group">
-                <label for="email">Email</label>
-                {{ form.email(class="form-control", placeholder="Enter your email") }}
-            </div>
+        {{ form.hidden_tag() }}
+        <legend class="legend">Login</legend>
 
-            <div class="form-group">
-                <label for="password">Password</label>
-                {{ form.password(class="form-control", placeholder="Enter your password") }}
-            </div>
+        {% if form.username.errors %}
+        {{ form.username(class='form-post-title is-invalid', placeholder='Username') }}
+        <div class="invalid-feedback">
+            {% for error in form.username.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+        {% else %}
+        {{ form.username(class='form-post-title', placeholder='Username') }}
+        {% endif %}
 
-            <div class="form-group form-check">
-                {{ form.remember(class="form-check-input") }}
-                <label class="form-check-label" for="remember">Remember me</label>
-            </div>
+        {% if form.password.errors %}
+        {{ form.password(class='form-post-title is-invalid', placeholder='Password') }}
+        <div class="invalid-feedback">
+            {% for error in form.password.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+        {% else %}
+        {{ form.password(class='form-post-title', placeholder='Password') }}
+        {% endif %}
 
-            <div class="form-group">
-                {{ form.submit(class="btn btn-primary") }}
-            </div>
+        <div class="form-group_button">
+            {{ form.submit(class='btn_sign_in', value='Sign In') }}
+            {% if current_user.is_authenticated %}
+            <small class="text-muted">
+                Already logged in. Go to <a class='ml-2' href="{{ url_for('main.index') }}">Main Page</a>.
+            </small>
+            {% else %}
+            <small class="text-muted">
+                Don't have an account? <a class='ml-2' href="{{ url_for('main.register') }}">Register</a>
+            </small>
+            {% endif %}
+        </div>
 
-        </form>
-
-    </div>
+    </form>
+</div>
 
 {% endblock content %}

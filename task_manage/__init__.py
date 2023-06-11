@@ -29,4 +29,3 @@ def create_app():
 
 app_ctx = create_app()
 
-
