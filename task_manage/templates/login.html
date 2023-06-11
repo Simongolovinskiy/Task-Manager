@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='/styles/loginstyle.css') }}">
+
+<div class="login_form">
+    <form action="" method="POST">
+
+        {{ form.hidden_tag() }}
+        <legend class="legend">Login</legend>
+
+        {% if form.username.errors %}
+        {{ form.username(class='form-post-title is-invalid', placeholder='Username') }}
+        <div class="invalid-feedback">
+            {% for error in form.username.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+        {% else %}
+        {{ form.username(class='form-post-title', placeholder='Username') }}
+        {% endif %}
+
+        {% if form.password.errors %}
+        {{ form.password(class='form-post-title is-invalid', placeholder='Password') }}
+        <div class="invalid-feedback">
+            {% for error in form.password.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+        {% else %}
+        {{ form.password(class='form-post-title', placeholder='Password') }}
+        {% endif %}
+
+        <div class="form-group_button">
+            {{ form.submit(class='btn_sign_in', value='Sign In') }}
+            {% if current_user.is_authenticated %}
+            <small class="text-muted">
+                Already logged in. Go to <a class='ml-2' href="{{ url_for('main.index') }}">Main Page</a>.
+            </small>
+            {% else %}
+            <small class="text-muted">
+                Don't have an account? <a class='ml-2' href="{{ url_for('main.register') }}">Register</a>
+            </small>
+            {% endif %}
+        </div>
+
+    </form>
+</div>
+
+{% endblock content %}

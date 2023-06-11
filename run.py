@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from werkzeug.security import generate_password_hash, check_password_hash
-from main import create_app, create_user
+from task_manage import create_app, database
 
 
 app = create_app()
@@ -8,6 +8,7 @@ app = create_app()
 
 
 if __name__ == '__main__':
-    create_user()
-    app.run(debug=True, port=5000)
+    with app.app_context():
+        database.create_all()
+        app.run(debug=True, port=5000)
 
