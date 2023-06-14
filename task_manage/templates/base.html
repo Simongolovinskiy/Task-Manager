@@ -24,19 +24,28 @@
                     <li><a href="{{ url_for('main.index') }}"><p>Main page</p></a></li>
                     {% if current_user.is_authenticated %}
                         <li><a href="#"><p>Tasks</p></a></li>
-                        <li><a href="#"><p>Add task</p></a></li>
+                        <li><a href="{{url_for('task.add_task')}}"><p>Add task</p></a></li>
                         <li><a href="/account"><p>Account</p></a></li>
                         <li><a href="{{ url_for('main.logout') }}"><p>Logout</p></a></li>
                     {% else %}
                         <li><a href="{{ url_for('main.register') }}"><p>Registration</p></a></li>
                         <li><a href="{{ url_for('main.login') }}"><p>Login</p></a></li>
                     {% endif %}
-                    <li><a href="{{ url_for('main.index') }}"><p>Exit</p></a></li>
+                    <li><a href="{{ url_for('main.index') }}"><p>Home</p></a></li>
                 </ul>
             </header>
         {% endblock menu %}
 
         {% block content %}
+            <!-- {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <ul class="flash-messages">
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %} !-->
 
             {% block registration_form %}
                 <div class="registration_form">
@@ -53,17 +62,16 @@
                     </form>
                 </div>
             {% endblock login_form %}
-
         {% endblock content %}
 
         {% block main_page %}
-            <div class="content">
+            <div class="content" style="font-size: 20px; color: #00BFFF; font-weight:bold; text-align: center;">
                 This is a Task-manager, inspired by JIRA 2.0
             </div>
         {% endblock main_page %}
 
         {% block footer %}
-            <footer class="footer">Task-Manager made by Simon Golovinskiy<br>
+            <footer class="footer" style="font-size: 20px; color: #FFD700; font-weight:bold; text-align: center;">Task-Manager made by Simon Golovinskiy<br>
             </footer>
         {% endblock footer %}
     </div>
