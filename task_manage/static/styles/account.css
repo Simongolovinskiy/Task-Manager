@@ -1,0 +1,40 @@
+.payday2-style {
+    background: linear-gradient(to right, #9400D3, #008000);
+    color: #FFF0F5;
+    padding: 100px;
+    border-radius: 25px;
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 800px;
+    margin: 0 auto;
+    margin-top: 75px;
+}
+
+.payday2-style h1, .payday2-style h2, .payday2-style p {
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    margin: 0;
+    padding: 25px 0;
+}
+
+.payday2-style h1 {
+    font-size: 60px;
+
+}
+
+.payday2-style h2 {
+    font-size: 35px;
+
+}
+
+.payday2-style p {
+    font-size: 25px;
+
+}
+
+.footer {
+    color: #FFD700;
+
+
+}
+

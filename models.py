@@ -16,7 +16,8 @@ class User(database.Model, UserMixin):
     email = database.Column(database.String(120), unique=True, nullable=False)
     img_file = database.Column(database.String(20), nullable=False, default='default.jpg')
     password = database.Column(database.String(60), nullable=False)
-    #tasks = database.relationship('Task', backref='for me', lazy=True)
+    last_seen = database.Column(database.DateTime)
+    avatar = database.relationship('Task', backref='lead', lazy=True)
 
     def set_password(self, password):
         self.password = bcrypt.generate_password_hash(password).decode('utf-8')
@@ -28,4 +29,11 @@ class User(database.Model, UserMixin):
         return f'User({self.id}, {self.username}, {self.email}, {self.password}, {self.img_file})'
 
 
+class Task(database.Model):
+    id = database.Column(database.Integer, primary_key=True)
+    title = database.Column(database.String(35), unique=True, nullable=False)
+    contain = database.Column(database.String(500), unique=False, nullable=False)
+    report = database.Column(database.String(30), nullable=False, default='default.jpg')
+    #lead = database.Column(database.String(30), nullable=False)
+    user_id = database.Column(database.Integer, database.ForeignKey('user.id'), nullable=False)
 

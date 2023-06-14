@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ current_user.username }} - Account{% endblock title %}
-
 {% block menu %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/account.css') }}">
 <header class="header">
     <div class="logo">
         <img src="{{ url_for('static', filename='img/logo.png') }}" alt="logo">
@@ -12,9 +11,9 @@
         {% if current_user.is_authenticated %}
             <li><a href="#"><p>Tasks</p></a></li>
             <li><a href="/account"><p>Account</p></a></li>
-            <li><a href="#"><p>Add task</p></a></li>
+            <li><a href="/tasks/create"><p>Add task</p></a></li>
             <li><a href="{{ url_for('main.logout') }}"><p>Logout</p></a></li>
-            <li><a href="{{ url_for('main.index') }}"><p>Exit</p></a></li>
+            <li><a href="{{ url_for('main.index') }}"><p>Home</p></a></li>
         {% else %}
             <li><a href="{{ url_for('main.login') }}"><p>Login</p></a></li>
             <li><a href="{{ url_for('main.register') }}"><p>Register</p></a></li>
@@ -28,8 +27,9 @@
 
 {% block content %}
     {% if current_user.is_authenticated %}
-        <div class="content">
+        <div class="content payday2-style">
             <h1>Hello, {{ current_user.username }}</h1>
+            <h2>Last seen: {{ current_user.last_seen }}</h2>
             <p>Your email is: {{ current_user.email }}</p>
         </div>
     {% else %}
