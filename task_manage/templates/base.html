@@ -23,7 +23,7 @@
                 <ul class="Main_menu">
                     <li><a href="{{ url_for('main.index') }}"><p>Main page</p></a></li>
                     {% if current_user.is_authenticated %}
-                        <li><a href="#"><p>Tasks</p></a></li>
+                        <li><a href="/tasks"><p>Tasks</p></a></li>
                         <li><a href="{{url_for('task.add_task')}}"><p>Add task</p></a></li>
                         <li><a href="/account"><p>Account</p></a></li>
                         <li><a href="{{ url_for('main.logout') }}"><p>Logout</p></a></li>
@@ -37,20 +37,10 @@
         {% endblock menu %}
 
         {% block content %}
-            <!-- {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    <ul class="flash-messages">
-                        {% for message in messages %}
-                            <li>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            {% endwith %} !-->
-
             {% block registration_form %}
                 <div class="registration_form">
                     <form action="{{ url_for('main.register') }}" method="POST">
-                        <!-- Форма регистрации -->
+
                     </form>
                 </div>
             {% endblock registration_form %}
@@ -58,7 +48,7 @@
             {% block login_form %}
                 <div class="login_form">
                     <form action="{{ url_for('main.login') }}" method="POST">
-                        <!-- Форма входа -->
+
                     </form>
                 </div>
             {% endblock login_form %}

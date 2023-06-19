@@ -19,3 +19,5 @@ class TaskUpdate(FlaskForm):
     report = FileField('Execution Report', validators=[FileAllowed(['pdf', 'jpg',
                                                                      'png', 'word'])])
     submit = SubmitField('Create')
+
+

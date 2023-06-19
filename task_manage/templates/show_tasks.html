@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/showing_task.css') }}">
+
+<h1>{{ current_user.username }}'s Tasks</h1>
+
+{% if tasks.items|length %}
+  {% for task in tasks.items %}
+    <div class="task">
+      <h2>{{ task.title }}</h2>
+
+      <p>{{ task.task_date }}</p>
+      <p>Report File:
+        <a class="report-file-link" href="{{ url_for('task.download_file', task_id=task.id, filename=task.report) }}">Download report</a>
+      </p>
+      <button class="details-btn">Details</button>
+      <div class="modal">
+        <div class="modal-content">
+          <h2>{{ task.contain }}</h2>
+          <p>{{ task.details }}</p>
+          <button class="close-btn">Close</button>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+{% else %}
+  <p class="no-tasks">No tasks for now, {{ current_user.username }} =)</p>
+{% endif %}
+
+<div class="pagination">
+  {% if tasks.has_prev %}
+    <a href="{{ url_for('task.show_tasks', page=tasks.prev_num) }}">Previous</a>
+  {% endif %}
+  {% if tasks.has_next %}
+    <a href="{{ url_for('task.show_tasks', page=tasks.next_num) }}">Next</a>
+  {% endif %}
+</div>
+
+<script>
+  var detailsButtons = document.querySelectorAll('.details-btn');
+  var modalCloseButtons = document.querySelectorAll('.close-btn');
+  var modals = document.querySelectorAll('.modal');
+
+  detailsButtons.forEach(function(button, index) {
+    button.addEventListener('click', function() {
+      modals[index].style.display = 'block';
+    });
+  });
+
+  modalCloseButtons.forEach(function(button, index) {
+    button.addEventListener('click', function() {
+      modals[index].style.display = 'none';
+    });
+  });
+</script>
+
+{% endblock %}

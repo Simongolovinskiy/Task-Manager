@@ -3,14 +3,15 @@
     color: #FFF0F5;
     padding: 100px;
     border-radius: 25px;
-    width: 100%;
-    box-sizing: border-box;
     max-width: 800px;
     margin: 0 auto;
     margin-top: 75px;
+    position: relative;
 }
 
-.payday2-style h1, .payday2-style h2, .payday2-style p {
+.payday2-style h1,
+.payday2-style h2,
+.payday2-style p {
     font-family: 'Arial', sans-serif;
     font-weight: bold;
     margin: 0;
@@ -19,22 +20,172 @@
 
 .payday2-style h1 {
     font-size: 60px;
-
 }
 
 .payday2-style h2 {
     font-size: 35px;
-
 }
 
 .payday2-style p {
     font-size: 25px;
-
 }
 
 .footer {
     color: #FFD700;
-
-
 }
 
+.avatar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    transition: filter 0.3s;
+}
+
+.avatar img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.avatar:hover {
+    filter: brightness(120%);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 15px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+}
+
+.form-group input[type="file"] {
+    display: none;
+}
+
+.avatar-input {
+    border: 2px solid #ADFF2F;
+    border-radius: 5px;
+    padding: 10px;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.avatar-input:focus {
+    border-color: #ADFF2F;
+}
+
+.form-group input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.form-group input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+.rounded-button {
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    background-color: #4d90fe;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.rounded-button:hover {
+    background-color: #357ae8;
+}
+
+.rounded-button:focus {
+    outline: none;
+}
+
+.form-group input[type="file"] {
+    display: none;
+}
+
+.avatar-input {
+    display: none;
+}
+
+.avatar-input + label {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    background-color: blue;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.avatar-input + label:hover {
+    background-color: darkblue;
+}
+
+.avatar-input + label::after {
+    content: 'Choose File';
+    display: inline-block;
+    padding-left: 10px;
+}
+
+.avatar-input:focus + label,
+.avatar-input.has-file + label {
+    background-color: green;
+}
+
+.avatar-input.has-file + label::after {
+    content: 'Change File';
+}
+
+.avatar-input.has-file + label::before {
+    content: attr(data-file-name);
+    display: inline-block;
+    padding-right: 10px;
+}
