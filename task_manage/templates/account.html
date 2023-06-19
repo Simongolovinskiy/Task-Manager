@@ -1,44 +1,106 @@
 {% extends 'base.html' %}
 
 {% block menu %}
-<link rel="stylesheet" href="{{ url_for('static', filename='styles/account.css') }}">
-<header class="header">
-    <div class="logo">
-        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="logo">
-    </div>
-    <ul class="Main_menu">
-        <li><a href="{{ url_for('main.index') }}"><p>Main page</p></a></li>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/account.css') }}">
+    <header class="header">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="logo">
+        </div>
         {% if current_user.is_authenticated %}
-            <li><a href="#"><p>Tasks</p></a></li>
-            <li><a href="/account"><p>Account</p></a></li>
-            <li><a href="/tasks/create"><p>Add task</p></a></li>
-            <li><a href="{{ url_for('main.logout') }}"><p>Logout</p></a></li>
-            <li><a href="{{ url_for('main.index') }}"><p>Home</p></a></li>
-        {% else %}
-            <li><a href="{{ url_for('main.login') }}"><p>Login</p></a></li>
-            <li><a href="{{ url_for('main.register') }}"><p>Register</p></a></li>
+            <div class="avatar">
+                <img id="avatar-img" src="{{ url_for('static', filename='avatars/' + current_user.username + '/' + current_user.img_file) }}"
+                     alt="{{ url_for('static', filename='avatars/' + current_user.username + '/default.jpg') | safe }}">
+            </div>
         {% endif %}
-        {% if current_user.is_authenticated %}
-            <li><a href="/account"><p>{{ current_user.username }}</p></a></li>
-        {% endif %}
-    </ul>
-</header>
+        <ul class="Main_menu">
+            <li><a href="{{ url_for('main.index') }}"><p>Main page</p></a></li>
+            {% if current_user.is_authenticated %}
+                <li><a href="/tasks"><p>Tasks</p></a></li>
+                <li><a href="/account"><p>Account</p></a></li>
+                <li><a href="/tasks/create"><p>Add task</p></a></li>
+                <li><a href="{{ url_for('main.logout') }}"><p>Logout</p></a></li>
+                <li><a href="{{ url_for('main.index') }}"><p>Home</p></a></li>
+            {% else %}
+                <li><a href="{{ url_for('main.login') }}"><p>Login</p></a></li>
+                <li><a href="{{ url_for('main.register') }}"><p>Register</p></a></li>
+            {% endif %}
+            {% if current_user.is_authenticated %}
+                <li><a href="/account"><p>{{ current_user.username }}</p></a></li>
+            {% endif %}
+        </ul>
+    </header>
 {% endblock menu %}
 
 {% block content %}
-    {% if current_user.is_authenticated %}
-        <div class="content payday2-style">
+    <div class="payday2-style">
+        {% if current_user.is_authenticated %}
             <h1>Hello, {{ current_user.username }}</h1>
             <h2>Last seen: {{ current_user.last_seen }}</h2>
             <p>Your email is: {{ current_user.email }}</p>
-        </div>
-    {% else %}
-        <div class="content">
+            {% if current_user.id == 2 %}
+                <h3>All users:</h3>
+                <ul>
+                    {% for user in users %}
+                        <li>
+                            <div class="myuser">
+                                <img src="{{ url_for('static', filename='avatars/' + user.username + '/' + user.img_file) }}" alt="default.jpg"
+                                     class="mr-3 mt-3 rounded-circle" style="width: 40px;">
+                            </div>
+                            <a href="{{ url_for('user.tasks', username=user.username) }}">{{ user.username }}</a>
+                            <h6 style="color:red;"><a href="{{ url_for(user.delete_user, username=user.username) }}"> {{ user.username }}</a></h6>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% else %}
             <p>Please log in to access your account.</p>
+        {% endif %}
+    </div>
+
+    <div class="modal" id="avatar-modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form method="POST" action="{{ url_for('main.account') }}" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.username.label }} {{ form.username }}
+                </div>
+                <div class="form-group">
+                    {{ form.email.label }} {{ form.email }}
+                </div>
+                <div class="form-group" style="background-color: #20B2AA; color: #fff; border-radius: 20px;
+                padding: 5px 18px; display: inline-block; cursor: pointer;">
+                    <label for="avatar">Avatar</label>
+                    <input type="file" name="avatar" id="avatar" class="avatar-input">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="rounded-button">Submit</button>
+                </div>
+            </form>
         </div>
-    {% endif %}
+    </div>
+
+    <script>
+        var avatarImg = document.getElementById("avatar-img");
+        var modal = document.getElementById("avatar-modal");
+        var span = document.getElementsByClassName("close")[0];
+
+        avatarImg.onclick = function() {
+            modal.style.display = "block";
+        };
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        };
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        };
+    </script>
 {% endblock content %}
 
 {% block footer %}
-<footer class="footer">Task-Manager made by Simon Golovinskiy<br></footer>
+    <footer class="footer">Task-Manager made by Simon Golovinskiy<br></footer>
 {% endblock footer %}
