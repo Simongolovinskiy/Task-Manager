@@ -9,3 +9,5 @@ v.3.0: add task function implemented, view tasks.
 if you need to share this project on your computer, follow this instructions:
 git clone https://github.com/Simongolovinskiy/Task-Manager.git
 pip install -r requirments.txt
+
+v.4.0: This is final mvp product for some users. New functions and updates will come soon :)
