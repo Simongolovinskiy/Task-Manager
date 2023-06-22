@@ -8,12 +8,13 @@ from werkzeug.utils import secure_filename
 
 
 def save_report_task(report_form):
-    if report_form is None:
+    if report_form is None or report_form.filename == '':
         raise ValueError('Missing file.')
+
     token = str(uuid.uuid4())
-    name, extension = os.path.splitext(secure_filename(report_form.filename))
+    extension = os.path.splitext(secure_filename(report_form.filename))[1]
     report_fn = token + extension
-    full_path = os.path.join(current_app.root_path, 'static', 'reports', current_user.username, f'{current_user.username}_report')
+    full_path = os.path.join(current_app.root_path, 'static', 'users', current_user.username, 'reports')
 
     if not os.path.exists(full_path):
         os.makedirs(full_path)
@@ -22,22 +23,23 @@ def save_report_task(report_form):
     output_size = (500, 500)
 
     file_formats = {
-            '.pdf': lambda r, p: r.save(p),
-            '.jpg': lambda r, p: (lambda img, path: (img.thumbnail(output_size) or img.save(path)))(Image.open(r), p),
-            '.jpeg': lambda r, p: (lambda img, path: (img.thumbnail(output_size) or img.save(path)))(Image.open(r), p),
-            '.png': lambda r, p: (lambda img, path: (img.thumbnail(output_size) or img.save(path)))(Image.open(r), p),
-            '.gif': lambda r, p: (lambda img, path: (img.thumbnail(output_size) or img.save(path)))(Image.open(r), p)
-        }
+        '.pdf': lambda r, p: r.save(p),
+        '.jpg': lambda r, p: (lambda img, path: (img.thumbnail(output_size) or img.save(path)))(Image.open(r), p),
+        '.jpeg': lambda r, p: (lambda img, path: (img.thumbnail(output_size) or img.save(path)))(Image.open(r), p),
+        '.png': lambda r, p: (lambda img, path: (img.thumbnail(output_size) or img.save(path)))(Image.open(r), p),
+        '.gif': lambda r, p: (lambda img, path: (img.thumbnail(output_size) or img.save(path)))(Image.open(r), p)
+    }
+
     if extension.lower() in file_formats.keys():
         file_handler = file_formats.get(extension.lower())
         if file_handler:
             file_handler(report_form, rep_path)
             return rep_path
         else:
-            raise NotImplemented('Something went wrong.')
-
+            raise NotImplementedError('Something went wrong. Contact admin.')
     else:
-        raise ValueError('Unsupported  file extension')
+        raise ValueError('Unsupported file extension.')
+
 
 
 def register_user_avatar(avatar_form):
@@ -47,8 +49,7 @@ def register_user_avatar(avatar_form):
     token = str(uuid.uuid4())
     extension = os.path.splitext(secure_filename(avatar_form.filename))[1]
     pic_fn = token + extension
-    full_path = os.path.join(current_app.root_path, 'static', 'avatars', current_user.username)
-
+    full_path = os.path.join(current_app.root_path, 'static', 'users', current_user.username, 'avatars')
     if not os.path.exists(full_path):
         os.makedirs(full_path)
 
@@ -56,5 +57,3 @@ def register_user_avatar(avatar_form):
     avatar_form.save(pic_path)
 
     return pic_fn
-
-

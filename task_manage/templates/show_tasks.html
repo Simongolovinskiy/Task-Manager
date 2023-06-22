@@ -2,19 +2,31 @@
 
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/showing_task.css') }}">
-
+{% if current_user.id == 1 %}
+<h1>You are admin, check the Tasks </h1>
+{% else %}
 <h1>{{ current_user.username }}'s Tasks</h1>
+{% endif %}
 
 {% if tasks.items|length %}
   {% for task in tasks.items %}
-    <div class="task">
+    <div class="task" style="background: linear-gradient(-20deg, #616161 0%, #9bc5c3 100%);">
       <h2>{{ task.title }}</h2>
 
       <p>{{ task.task_date }}</p>
       <p>Report File:
-        <a class="report-file-link" href="{{ url_for('task.download_file', task_id=task.id, filename=task.report) }}">Download report</a>
+        <a class="report-file-link" href="{{ url_for('task.download_file', task_id=task.id, filename=task.report) }}" style="background: linear-gradient(-20deg, #616161 0%, #9bc5c3 100%); border: 2px solid black; font-size: 14px; padding: 5px 20px; border-radius: 15px;">Download report</a>
       </p>
-      <button class="details-btn">Details</button>
+      {% if task.updated %}
+        <p style="color: #00FF00">Ready for submit <span class="updated-mark">&#10004;</span></p>
+      {% endif %}
+      <button class="details-btn" style="background-color: #20B2AA; color: #fff; border-radius: 20px; padding: 5px 18px; display: inline-block; cursor: pointer;">Details</button>
+      <a href="{{ url_for('task.task_commit', task_id=task.id) }}" class="commit-btn" style="background-color: #20B2AA; color: #fff; border-radius: 20px; padding: 5px 18px; display: inline-block; cursor: pointer;">Commit</a>
+      {% if current_user.is_admin or current_user.id == task.user_id %}
+      <form class="delete-form" action="{{ url_for('task.task_delete', task_id=task.id) }}" method="POST" style="display: inline-block;">
+        <button type="submit" class="delete-btn" style="background-color: #FF4500; color: #fff; border-radius: 20px; padding: 5px 18px; display: inline-block; cursor: pointer;">Delete</button>
+      </form>
+      {% endif %}
       <div class="modal">
         <div class="modal-content">
           <h2>{{ task.contain }}</h2>
@@ -30,10 +42,10 @@
 
 <div class="pagination">
   {% if tasks.has_prev %}
-    <a href="{{ url_for('task.show_tasks', page=tasks.prev_num) }}">Previous</a>
+    <a href="{{ url_for('task.show_tasks', page=tasks.prev_num) }}" class="second_button">Previous</a>
   {% endif %}
   {% if tasks.has_next %}
-    <a href="{{ url_for('task.show_tasks', page=tasks.next_num) }}">Next</a>
+    <a href="{{ url_for('task.show_tasks', page=tasks.next_num) }}" class="second_button">Next</a>
   {% endif %}
 </div>
 

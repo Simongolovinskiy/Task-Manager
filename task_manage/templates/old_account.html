@@ -1,9 +1,0 @@
-{% extends "base.html" %}
-
-{% block content %}
-{{% if current_user.is_authenticated %}}
-    <div class="content">
-        <h1>{{ current_user.username }}'s Account </h1>
-        <p>Welcome to your account page. Here you can manage your account details.</p>
-    </div>
-{% endblock content %}
