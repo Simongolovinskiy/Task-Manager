@@ -6,7 +6,7 @@
         <h2>Create a New Task</h2>
     </div>
     <div class="avatar">
-        <img src="{{ image_file }}" alt="User Avatar">
+        <img id="avatar-img" src="{{ url_for('static', filename='users/' + current_user.username + '/avatars/' + current_user.img_file) }}" alt="">
     </div>
     <form class="sea-theme-form" method="POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
@@ -19,6 +19,11 @@
         <div class="form-group">
             {{ form.report.label }} {{ form.report(class='form-control-file') }}
         </div>
+        {% if current_user.is_admin %}
+            <div class="form-group">
+                {{ form.user.label }} {{ form.user(class='form-control') }}
+            </div>
+        {% endif %}
         <div class="form-group">
             {{ form.submit(class='btn btn-primary') }}
         </div>

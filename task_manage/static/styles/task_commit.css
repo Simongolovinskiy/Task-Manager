@@ -1,0 +1,71 @@
+/* task_commit.css */
+
+h1 {
+  text-align: center;
+}
+
+.task {
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  max-width: 500px;
+  background-color: #f5f5f5;
+}
+
+.task h2 {
+  font-size: 24px;
+}
+
+.task p {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-control-label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 5px;
+  font-size: 16px;
+}
+
+.form-control-file {
+  width: 100%;
+  padding: 5px;
+}
+
+.btn-primary {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  text-align: center;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #green;
+}
+
+.ready-for-submit {
+  display: flex;
+  align-items: center;
+}
+
+.updated-mark {
+  color: green;
+  font-size: 18px;
+  margin-right: 5px;
+  background: green;
+}
+

@@ -8,8 +8,8 @@
         </div>
         {% if current_user.is_authenticated %}
             <div class="avatar">
-                <img id="avatar-img" src="{{ url_for('static', filename='avatars/' + current_user.username + '/' + current_user.img_file) }}"
-                     alt="{{ url_for('static', filename='avatars/' + current_user.username + '/default.jpg') | safe }}">
+                <img id="avatar-img" src="{{ image_file }}"
+                     alt="{{url_for('static', filename='users/default.jpg')}}">
             </div>
         {% endif %}
         <ul class="Main_menu">
@@ -24,8 +24,8 @@
                 <li><a href="{{ url_for('main.login') }}"><p>Login</p></a></li>
                 <li><a href="{{ url_for('main.register') }}"><p>Register</p></a></li>
             {% endif %}
-            {% if current_user.is_authenticated %}
-                <li><a href="/account"><p>{{ current_user.username }}</p></a></li>
+            {% if current_user.is_authenticated and current_user.is_admin %}
+                <li><a href="/admin"><p>admin</p></a></li>
             {% endif %}
         </ul>
     </header>
@@ -35,19 +35,25 @@
     <div class="payday2-style">
         {% if current_user.is_authenticated %}
             <h1>Hello, {{ current_user.username }}</h1>
-            <h2>Last seen: {{ current_user.last_seen }}</h2>
+            <h2>Last seen: {{ current_user.last_seen.strftime('%Y-%m-%d %H:%M') }}</h2>
             <p>Your email is: {{ current_user.email }}</p>
-            {% if current_user.id == 2 %}
-                <h3>All users:</h3>
-                <ul>
+            {% if current_user.is_admin %}
+
+                <button onclick="showUsers()" style="display: inline-block; color: white; text-decoration: none; padding: .5em 2em; outline: none; border-width: 2px 0; border-style: solid none; border-color: #B0E0E6; font-weight: bold; text-align: center; border-radius: 6px; background: linear-gradient(#5F9EA0, #7B68EE) #B0E0E6; transition: 0.2s;">All Users</button>
+                <ul id="users-list" style="display: none;">
                     {% for user in users %}
                         <li>
                             <div class="myuser">
-                                <img src="{{ url_for('static', filename='avatars/' + user.username + '/' + user.img_file) }}" alt="default.jpg"
-                                     class="mr-3 mt-3 rounded-circle" style="width: 40px;">
+                                <img src="{{ url_for('static', filename='users/' + user.username  + '/avatars/' + user.img_file ) }}" alt=""
+                                     class="mr-3 mt-3 rounded-circle" style="width: 30px; border-radius: 15px;">
                             </div>
-                            <a href="{{ url_for('user.tasks', username=user.username) }}">{{ user.username }}</a>
-                            <h6 style="color:red;"><a href="{{ url_for(user.delete_user, username=user.username) }}"> {{ user.username }}</a></h6>
+                            <a href="{{ url_for('task.show_tasks', username=user.username) }}" style="width: 130px; height: 40px; color: #fff; border-radius: 15px; padding: 10px 25px; font-family: 'Lato', sans-serif; font-weight: 500; background: transparent; cursor: pointer; transition: all 0.3s ease; position: relative; display: inline-block; box-shadow: inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1); outline: none;">
+                                <span style="position: relative; display: block; width: 100%; height: 100%;">
+                                {{ user.username }}
+                                </span>
+                            </a>
+
+                            <h6 style="display: inline-block; background-color: #8B0000; color: black; border-radius: 15px; padding: 10px 20px; text-decoration: none; font-weight: bold;"><a href="{{ url_for('main.delete_user', username=user.username) }}"> Delete {{  user.username }}</a></h6>
                         </li>
                     {% endfor %}
                 </ul>
@@ -56,7 +62,6 @@
             <p>Please log in to access your account.</p>
         {% endif %}
     </div>
-
     <div class="modal" id="avatar-modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -84,6 +89,7 @@
         var avatarImg = document.getElementById("avatar-img");
         var modal = document.getElementById("avatar-modal");
         var span = document.getElementsByClassName("close")[0];
+        var usersList = document.getElementById("users-list");
 
         avatarImg.onclick = function() {
             modal.style.display = "block";
@@ -98,6 +104,14 @@
                 modal.style.display = "none";
             }
         };
+
+        function showUsers() {
+            if (usersList.style.display === "none") {
+                usersList.style.display = "block";
+            } else {
+                usersList.style.display = "none";
+            }
+        }
     </script>
 {% endblock content %}
 

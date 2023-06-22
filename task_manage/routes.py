@@ -1,6 +1,5 @@
 import os
 import shutil
-
 import sqlalchemy.exc
 
 from task.utils import register_user_avatar
@@ -8,7 +7,7 @@ from task_manage.forms import LoginForm, RegistrationForm, UpdateAccountForm
 from task_manage import bcrypt, database
 from models import check_password_hash, User, Task
 
-from flask import render_template, request, redirect, flash, url_for, Blueprint
+from flask import render_template, request, redirect, flash, url_for, Blueprint, abort
 from flask_login import current_user, login_user, logout_user, login_required
 
 from sqlalchemy import or_
@@ -25,8 +24,16 @@ def register():
         user = User(username=form.username.data,
                     email=form.email.data,
                     password=hashed_password)
+
         database.session.add(user)
         database.session.commit()
+        if user.id == 1:
+            user.is_admin = True
+            database.session.commit()
+        full_path = os.path.join(os.getcwd(), f'task_manage/static/users/{user.username}/avatars')
+        if not os.path.exists(full_path):
+            os.makedirs(full_path)
+        shutil.copy(f'{os.getcwd()}/task_manage/static/users/default.jpg', full_path)
         flash('Account successfully created. You can redirect to log into your account.')
         return redirect(url_for('main.login'))
     return render_template('register.html', form=form, title='Registration', legend='Registration')
@@ -50,7 +57,8 @@ def login():
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('main.account'))
         else:
-            flash('Failed auth. Check your login or password', 'danger')
+            if form.username.data or form.email.data or form.password.data:
+                flash('Failed auth. Check your login or password', 'danger')
     return render_template('login.html', form=form, title='Login', legend='Enter')
 
 
@@ -67,9 +75,10 @@ def account():
         form.email.data = current_user.email
 
     if form.validate_on_submit():
-        old_path = os.path.join(os.getcwd(), f'task_manage/static/avatars/{user.username}')
-        new_path = os.path.join(os.getcwd(), f'task_manage/static/avatars/{form.username.data}')
-        os.rename(old_path, new_path)
+        old_path = os.path.join(os.getcwd(), f'task_manage/static/users/{user.username}/avatars')
+        new_path = os.path.join(os.getcwd(), f'task_manage/static/users/{form.username.data}/avatars')
+        if os.path.exists(old_path):
+            os.rename(old_path, new_path)
         current_user.username = form.username.data
         current_user.email = form.email.data
 
@@ -80,7 +89,7 @@ def account():
         flash('Your account has been updated!', 'success')
         return redirect(url_for('main.account'))
 
-    image_file = url_for('static', filename=f'avatars/{current_user.username}/{current_user.img_file}')
+    image_file = url_for('static', filename=f'users/{current_user.username}/avatars/{current_user.img_file}')
     return render_template('account.html', title='Account',
                            image_file=image_file, form=form,
                            users=users, tasks=tasks)
@@ -90,14 +99,17 @@ def account():
 def delete_user(username):
     try:
         user = User.query.filter_by(username=username).first_or_404()
-        if user and user.id == 1:
+        if user and user.id != 1:
             database.session.delete(user)
             database.session.commit()
-            full_path = os.path.join(os.getcwd(), f'/task_manage/static/avatars/{user.username}')
-        shutil.rmtree(full_path)
+            full_path = os.path.join(os.getcwd(), 'task_manage', 'static', 'users', user.username)
+            shutil.rmtree(full_path)
+            flash(f'User {username} has been removed.', 'info')
+            return redirect(url_for('main.account'))
+        else:
+            flash("You cannot delete admin's account.", 'info')
+            return redirect(url_for('main.account'))
 
-        flash(f'User {username} has been removed.', 'info')
-        return redirect(url_for('main.account'))
 
     except sqlalchemy.exc.IntegrityError:
 
@@ -106,6 +118,7 @@ def delete_user(username):
 
     except FileNotFoundError:
         return redirect(url_for('main.account'))
+
 
 @main.route('/logout')
 def logout():
@@ -117,37 +130,33 @@ def logout():
 
 @main.route('/')
 def home_page():
-    return render_template('main.index')\
+
+    return render_template('main.index')
 
 
+@main.route('/assign_admin/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def assign_admin(user_id):
+    if current_user.is_admin:
+        user = User.query.get(user_id)
+        if user:
+            if request.method == 'POST':
+                user.is_admin = True
+                database.session.commit()
+                flash('User assigned as admin.', 'success')
+                return redirect(url_for('main.index'))
+            else:
+                return render_template('assign_admin.html', user=user)
+        else:
+            abort(404)
+    else:
+        abort(403)
 
-@main.route('/html_page')
-def html_page():
-    return render_template('html_page.html')
-
-
-@main.route('/css_page')
-def css_page():
-    return render_template('css_page.html')
-
-
-@main.route('/js_page')
-def js_page():
-    return render_template('js_page.html')
-
-
-@main.route('/python_page')
-def python_page():
-    return render_template('python_page.html')
-
-
-@main.route('/flask_page')
-def flask_page():
-    return render_template('flask_page.html')
-
-
-@main.route('/django_page')
-def django_page():
-    return render_template('django_page.html')
-
-
+@main.route('/admin', methods=['GET', 'POST'])
+@login_required
+def admin():
+    if current_user.is_admin:
+        users = User.query.all()
+        return render_template('admin.html', users=users, title='Admin')
+    else:
+        abort(403)
