@@ -1,5 +1,5 @@
 FROM python:3.10
-MAINTAINER Simon Golovinskiy 'example@mair.ru'
+MAINTAINER Simon Golovinskiy 'example@mail.ru'
 
 LABEL authors="wasa"
 RUN mkdir -p /usr/src/app/wrkdir
