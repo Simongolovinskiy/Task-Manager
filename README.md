@@ -18,3 +18,6 @@ Docker - If you need to start it from container:
 2) enter in cmd prompt: docker build -t task_manager . That creates docker-img for start
 3) Just run it with command: docker run --rm --name Simon_Prod -p 8080:8080 task_manager
 Num 3: that is container, which automatically removes himself after turning off. If you need to save it - remove '--rm' from the command above.
+I didn't include volumes, so you cannot download reports if you are running that in the docker.
+
+if you need to run it on your computer - just change app.run(debug=False, port=8080, host='0.0.0.0') in run.py to the app.run(debug=True, port=5000)
