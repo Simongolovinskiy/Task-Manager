@@ -1,9 +1,8 @@
 from flask_bcrypt import check_password_hash, generate_password_hash
 from flask_login import UserMixin
 from task_manage import database, login_manager, bcrypt
-from task.utils import register_user_avatar
-import os
 from flask import current_app
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 
 @login_manager.user_loader
@@ -29,6 +28,19 @@ class User(database.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password, bcrypt.generate_password_hash(password).decode('utf-8'))
 
+    def get_reset_token(self, expires_sec=3600):
+        reset_token = Serializer(current_app.config['SECRET_KEY'], expires_sec)
+        return reset_token.dumps({'user_id': self.id}).decode('utf-8')
+
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+
+        return User.query.get(user_id)
     def __repr__(self):
         return f'User({self.id}, {self.username}, {self.email}, {self.password}, {self.img_file})'
 

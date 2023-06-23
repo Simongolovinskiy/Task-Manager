@@ -2,10 +2,11 @@ import uuid
 import os
 
 from PIL import Image
-from flask import current_app
+from flask import current_app, url_for
 from flask_login import current_user
 from werkzeug.utils import secure_filename
-
+from flask_mail import Message
+from task_manage import mail
 
 def save_report_task(report_form):
     if report_form is None or report_form.filename == '':
@@ -57,3 +58,17 @@ def register_user_avatar(avatar_form):
     avatar_form.save(pic_path)
 
     return pic_fn
+
+def send_reset_email(user):
+    token = user.get_reset_token()
+    message = Message('Password reset request',
+                  sender='your_email@hotmail.com',
+                  recipients=[user.email])
+    message.body = f'''
+    To reset your password click on this url:
+    {url_for('main.token_reset', token=token, _external=True)}
+    if you didn't do that request, please, ignore that message.
+    Nothing will be changed.
+    You don't need to answer on that e-mail since it was generated automatically.
+    '''
+    mail.send(message)

@@ -35,7 +35,9 @@
     <div class="payday2-style">
         {% if current_user.is_authenticated %}
             <h1>Hello, {{ current_user.username }}</h1>
+            {%if current_user.last_seen%}
             <h2>Last seen: {{ current_user.last_seen.strftime('%Y-%m-%d %H:%M') }}</h2>
+            {% endif %}
             <p>Your email is: {{ current_user.email }}</p>
             {% if current_user.is_admin %}
 

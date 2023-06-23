@@ -3,11 +3,13 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_migrate import Migrate
+from flask_mail import Mail
+
 
 database = SQLAlchemy()
 bcrypt = Bcrypt()
 migrate = Migrate()
-
+mail = Mail()
 
 login_manager = LoginManager()
 login_manager.login_view = 'main.login'
@@ -22,6 +24,7 @@ def create_app():
     bcrypt.init_app(app)
     migrate.init_app(app, database, render_as_batch=True)
     login_manager.init_app(app)
+    mail.init_app(app)
 
 
     from task_manage.routes import main

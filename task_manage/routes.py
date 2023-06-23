@@ -2,8 +2,8 @@ import os
 import shutil
 import sqlalchemy.exc
 
-from task.utils import register_user_avatar
-from task_manage.forms import LoginForm, RegistrationForm, UpdateAccountForm
+from task.utils import register_user_avatar, send_reset_email
+from task_manage.forms import LoginForm, RegistrationForm, UpdateAccountForm, ResetRequestForm, ResetPasswordForm
 from task_manage import bcrypt, database
 from models import check_password_hash, User, Task
 
@@ -160,3 +160,35 @@ def admin():
         return render_template('admin.html', users=users, title='Admin')
     else:
         abort(403)
+
+
+@main.route('/reset_password', methods=['GET', 'POST'])
+def reset_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+
+    form = ResetRequestForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        send_reset_email(user)
+        flash('Check your email for details.', 'info')
+        return redirect(url_for('main.login'))
+
+    return render_template('reset_request.html', form=form, title='Resetting Request ')
+
+@main.route('/reset_password/<token>', methods=['GET', 'POST'])
+def token_reset(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+    user = User.verify_reset_token(token)
+    if user is None:
+        flash('Invalid token.', 'warning')
+        return redirect(url_for('main.reset_request'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        hashed_pass = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user.password = hashed_pass
+        database.session.commit()
+        flash('Your password has been updated, you can login.', 'success')
+        return redirect(url_for('main.login'))
+    return render_template('reset_token.html', form=form, title='Password reset')

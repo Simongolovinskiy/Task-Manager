@@ -57,3 +57,18 @@ class UpdateAccountForm(FlaskForm):
                 flash('That e-mail is already taken. '
                       'Choose another one, please', 'danger')
                 raise ValidationError('That email is already taken.')
+
+class ResetRequestForm(FlaskForm):
+    email = StringField('E-mail', validators=[DataRequired(), Email()])
+    submit = SubmitField('Send E-mail')
+
+    def validate_email(self, email):
+        myemail = User.query.filter_by(email=email.data).first()
+        if myemail is None:
+            flash('Invalid email. Choose the correct.', 'danger')
+            raise ValidationError('That email does not exist.')
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Reset Password')

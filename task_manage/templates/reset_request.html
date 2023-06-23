@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='/styles/reset_request.css') }}">
+  <h1>Password Reset</h1>
+  <p style="font-weight: bold; text-align:center;">Please enter your email address to receive instructions on how to reset your password.</p>
+
+  <form method="POST" style="text-align:center;">
+    {{ form.hidden_tag() }}
+
+    <div class="form-group reset-password">
+      {{ form.email.label(class_='form-label') }}
+      {{ form.email(class_='form-control') }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Reset Password</button>
+  </form>
+{% endblock %}

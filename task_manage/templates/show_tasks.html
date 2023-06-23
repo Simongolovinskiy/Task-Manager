@@ -13,7 +13,7 @@
     <div class="task" style="background: linear-gradient(-20deg, #616161 0%, #9bc5c3 100%);">
       <h2>{{ task.title }}</h2>
 
-      <p>{{ task.task_date }}</p>
+      <p>{{ task.task_date.strftime('%Y-%m-%d %H:%M') }}</p>
       <p>Report File:
         <a class="report-file-link" href="{{ url_for('task.download_file', task_id=task.id, filename=task.report) }}" style="background: linear-gradient(-20deg, #616161 0%, #9bc5c3 100%); border: 2px solid black; font-size: 14px; padding: 5px 20px; border-radius: 15px;">Download report</a>
       </p>
